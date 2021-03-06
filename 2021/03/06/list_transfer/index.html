@@ -22,15 +22,20 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Mengjie&#39;s Blog">
-<meta property="og:url" content="http://example.com/archives/2021/01/index.html">
+  <meta name="description" content="12345678910111213void transfer(iterator position,iterator first,iterator last)*&#x2F;&#x2F;将[first,last)之间的元素迁移到position之前*&amp;#123;if (position !&#x3D; last)&amp;#123;(*(link_type((*last.node).prev))).next &#x3D; position.node">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++内 list内部提供的迁移操作注解">
+<meta property="og:url" content="http://example.com/2021/03/06/list_transfer/index.html">
 <meta property="og:site_name" content="Mengjie&#39;s Blog">
+<meta property="og:description" content="12345678910111213void transfer(iterator position,iterator first,iterator last)*&#x2F;&#x2F;将[first,last)之间的元素迁移到position之前*&amp;#123;if (position !&#x3D; last)&amp;#123;(*(link_type((*last.node).prev))).next &#x3D; position.node">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-03-06T06:39:21.000Z">
+<meta property="article:modified_time" content="2021-03-06T06:48:58.022Z">
 <meta property="article:author" content="李佳栖">
+<meta property="article:tag" content="C++,STL">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/archives/2021/01/">
+<link rel="canonical" href="http://example.com/2021/03/06/list_transfer/">
 
 
 <script id="page-configurations">
@@ -38,12 +43,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>归档 | Mengjie's Blog</title>
+  <title>C++内 list内部提供的迁移操作注解 | Mengjie's Blog</title>
   
 
 
@@ -152,50 +157,108 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 2 篇日志。 继续努力。</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/06/list_transfer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/./images/mengjie_avatar.png">
+      <meta itemprop="name" content="李佳栖">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mengjie's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++内 list内部提供的迁移操作注解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-03-06 14:39:21 / 修改时间：14:48:58" itemprop="dateCreated datePublished" datetime="2021-03-06T14:39:21+08:00">2021-03-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/program/" itemprop="url" rel="index"><span itemprop="name">program</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
+        <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">transfer</span><span class="params">(iterator position,iterator first,iterator last)</span>*<span class="comment">//将[first,last)之间的元素迁移到position之前*</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="keyword">if</span> (position != last)</span><br><span class="line">&#123;</span><br><span class="line">(*(link_type((*last.node).prev))).next = position.node;</span><br><span class="line">(*(link_type((*first.node).prev))).next = last.node;</span><br><span class="line">(*(link_type((*position.node).prev))).next = first.node;</span><br><span class="line">link_type tmp = link_type((*position.node).prev);</span><br><span class="line">(*position.node).prev = (*last.node).prev;</span><br><span class="line">(*last.node).prev = (*first.node).prev;</span><br><span class="line">(*first.node).prev = tmp;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+
+<p><strong>vector是左闭右开区间</strong></p>
+<p>代码中的第一步操作：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(*(link_type((*last.node).prev))).next = position.node;</span><br></pre></td></tr></table></figure>
+<p>使position节点成为last节点前一个节点的后继。</p>
+<p>第二步操作：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(*(link_type((*first.node).prev))).next = last.node;</span><br></pre></td></tr></table></figure>
+<p>对原[first, last)处的节点关系进行改变，由于[first, last)已移至position前，所以需要使原last节点成为原first节点前驱的后继。</p>
+<p>第三步操作：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(*(link_type((*position.node).prev))).next = first.node;</span><br></pre></td></tr></table></figure>
+<p>position处的节点关系同样需要改变，原position的前驱本应指向position，现改为指向first。</p>
+<p>后面几步：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">link_type tmp = link_type((*position.node).prev);</span><br><span class="line"></span><br><span class="line">(*position.node).prev = (*last.node).prev;</span><br><span class="line"></span><br><span class="line">(*last.node).prev = (*first.node).prev;</span><br><span class="line"></span><br><span class="line">(*first.node).prev = tmp;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">enter code here</span><br></pre></td></tr></table></figure>
+<p>建立双向链表的关系；</p>
+<p>position的前驱指向现last的前驱</p>
+<p>原last的前驱指向原first的前驱</p>
+<p>现first的前驱指向原position的前驱</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-01-28T09:39:21+08:00"
-              content="2021-01-28">
-          01-28
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C-STL/" rel="tag"># C++,STL</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/01/28/%E9%98%BF%E4%BC%A6%E7%89%B9-%E5%85%B3%E9%94%AE%E6%A6%82%E5%BF%B5/" itemprop="url">
-            <span itemprop="name">阿伦特：关键概念</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/28/%E9%98%BF%E4%BC%A6%E7%89%B9-%E5%85%B3%E9%94%AE%E6%A6%82%E5%BF%B5/" rel="prev" title="阿伦特：关键概念">
+      <i class="fa fa-chevron-left"></i> 阿伦特：关键概念
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
   </article>
-
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
